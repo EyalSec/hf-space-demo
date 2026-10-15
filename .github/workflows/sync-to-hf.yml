@@ -1,0 +1,37 @@
+# Push main to the Hugging Face Space, which rebuilds from the Dockerfile.
+#
+# Inactive until an EyalSec maintainer creates the Space and adds the
+# repository secret HF_TOKEN (a Hugging Face token with write access to it).
+# The Space is the repository variable HF_SPACE, EyalSec/es-python-demo when unset.
+name: Sync to Hugging Face
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.HF_TOKEN != '' }}
+    steps:
+      - name: Is Hugging Face configured?
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::notice::HF_TOKEN is not set; skipping the Hugging Face sync."
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: env.HAS_TOKEN == 'true'
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Push to the Space
+        if: env.HAS_TOKEN == 'true'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE || 'EyalSec/es-python-demo' }}
+        run: git push --force "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}" HEAD:main
