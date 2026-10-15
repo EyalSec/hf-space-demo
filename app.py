@@ -159,6 +159,10 @@ def run_path(name):
 RUNNERS = {"sqli": run_sqli, "cmd": run_cmd, "path": run_path}
 
 
+def plain(value):
+    return value.replace(T_ON, "").replace(T_OFF, "")
+
+
 def mark(value):
     """HTML for a value, with the request-supplied characters highlighted."""
     out, i = [], 0
@@ -268,8 +272,8 @@ Python runtime, records about it.</p>
 <dl>
 <dt>What happened</dt><dd><code>{html.escape(case["call"])}</code>: {html.escape(case["happened"])}</dd>
 <dt>Category</dt><dd>{html.escape(case["category"])}</dd>
-<dt>Source</dt><dd>socket (the HTTP request, from {PEER})</dd>
-<dt>Value when it was used</dt><dd><pre>{mark(shown)}</pre></dd>
+<dt>Source</dt><dd>socket: data received from a network connection, here your request from {PEER}</dd>
+<dt>Value when it was used</dt><dd><pre>{html.escape(plain(shown))}</pre></dd>
 <dt>Why this is risky</dt><dd>{html.escape(case["impact"])}</dd>
 <dt>What to do</dt><dd>{html.escape(case["fix"])}</dd>
 </dl>
@@ -277,7 +281,8 @@ Python runtime, records about it.</p>
 of running it:</p>
 <pre>{html.escape(raise_msg)}</pre>
 <p class="note">An illustration of the event's fields, built by this page from the request
-you sent. The highlighted characters are the ones that came from the request.</p>
+you sent. The highlighting on the left is this page's, to show which characters came
+from your request.</p>
 </section>
 </div>
 <footer>

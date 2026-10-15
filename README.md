@@ -22,7 +22,7 @@ columns side by side:
 
 | Column | What it shows |
 |---|---|
-| **Ordinary Python** | The value the vulnerable operation receives, with the characters that came from your request highlighted, and what the code does with it. The access log line is all that gets written down. |
+| **Ordinary Python** | The value the vulnerable operation receives (the page highlights the characters that came from your request) and what the code does with it. The access log line is all that gets written down. |
 | **es-python, network source on** | The fields of the event es-python records for the same request: the Python call that ran, where the data came from, the value when it was used, why it is risky and what to change. With a Raise rule, the `RuntimeError` the program gets instead. |
 
 The right-hand column is an illustration built by the page from your request,
